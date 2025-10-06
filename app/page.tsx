@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -16,18 +18,31 @@ import {
   TrendingUp,
   Users,
   Headset,
+  Star,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Youtube,
 } from "lucide-react"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
 import { useState } from "react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useToast } from "@/hooks/use-toast"
+import Image from "next/image"
 
 type Section = "home" | "about" | "news" | "faqs" | "resources" | "contact"
 
 export default function LandingPage() {
   const [activeSection, setActiveSection] = useState<Section>("home")
   const [searchQuery, setSearchQuery] = useState("")
+  const [showFranchiseForm, setShowFranchiseForm] = useState(false)
+  const { toast } = useToast()
 
   const newsUpdates = [
     {
@@ -153,6 +168,53 @@ export default function LandingPage() {
     },
   ]
 
+  const testimonials = [
+    {
+      name: "Dr. Rajesh Kumar",
+      location: "Bangalore, Karnataka",
+      store: "Medplus Koramangala",
+      years: 1,
+      rating: 5,
+      quote:
+        "Partnering with Medplus has been the best decision for my pharmacy business. The brand recognition and supply chain efficiency have helped me grow 40% year-over-year. The technology support and training programs are exceptional.",
+      metric: "10% MOM Growth",
+      avatar: "DRK",
+    },
+    {
+      name: "Mrs. Priya Sharma",
+      location: "Hyderabad, Telangana",
+      store: "Medplus Banjara Hills",
+      years: 2,
+      rating: 5,
+      quote:
+        "I converted my existing medical shop to a Medplus franchise three years ago, and it transformed my business completely. The operational support and marketing materials have made a huge difference. My customers trust the Medplus brand.",
+      metric: "3x Revenue Increase",
+      avatar: "MPS",
+    },
+    {
+      name: "Mr. Anil Patel",
+      location: "Mumbai, Maharashtra",
+      store: "Medplus Andheri West",
+      years: 1,
+      rating: 5,
+      quote:
+        "As one of the early franchisees, I've witnessed Medplus's incredible growth journey. The continuous innovation in technology and the dedicated support team make operations seamless. Proud to be part of this healthcare revolution.",
+      metric: "Consistent Growth",
+      avatar: "MAP",
+    },
+    {
+      name: "Dr. Meena Reddy",
+      location: "Chennai, Tamil Nadu",
+      store: "Medplus T Nagar",
+      years: 1,
+      rating: 5,
+      quote:
+        "The comprehensive training and ongoing support from Medplus have been invaluable. From inventory management to customer service, every aspect is well-structured. My store has become a trusted healthcare destination in the community.",
+      metric: "High Customer Satisfaction",
+      avatar: "DMR",
+    },
+  ]
+
   const filteredFaqs = faqs
     .map((category) => ({
       ...category,
@@ -165,19 +227,58 @@ export default function LandingPage() {
     }))
     .filter((category) => category.questions.length > 0)
 
+  const handleFranchiseSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const data = Object.fromEntries(formData)
+
+    // Validate required fields
+    if (!data.fullName || !data.mobile || !data.city || !data.state || !data.pincode || !data.interest) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Validate mobile number (10 digits)
+    if (!/^\d{10}$/.test(data.mobile as string)) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid 10-digit mobile number",
+        variant: "destructive",
+      })
+      return
+    }
+
+    // Validate pincode (6 digits)
+    if (!/^\d{6}$/.test(data.pincode as string)) {
+      toast({
+        title: "Error",
+        description: "Please enter a valid 6-digit pincode",
+        variant: "destructive",
+      })
+      return
+    }
+
+    console.log("Franchise query submitted:", data)
+    toast({
+      title: "Success!",
+      description: "Your query has been submitted. Our team will contact you soon.",
+    })
+    setShowFranchiseForm(false)
+    e.currentTarget.reset()
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-white to-blue-50">
       {/* Header with Auth Buttons */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-lg bg-cyan-800 flex items-center justify-center">
-              <span className="text-xl font-bold text-white">M+</span>
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-cyan-900">Medplus</h1>
-              <p className="text-xs text-gray-600">Franchisee Portal</p>
-            </div>
+            <Image src="/medplus-logo.png" alt="Medplus Logo" width={120} height={40} className="h-10 w-auto rounded-lg font-extrabold shadow-xl" />
+            <h1 className="text-xl font-semibold text-cyan-900 hidden sm:block">Medplus Franchisee     </h1>
           </div>
           <div className="flex gap-3">
             <Button variant="outline" asChild className="border-cyan-800 text-cyan-800 hover:bg-cyan-50 bg-transparent">
@@ -277,8 +378,13 @@ export default function LandingPage() {
                   millions of customers across the nation.
                 </p>
                 <div className="flex flex-wrap gap-4">
-                  <Button size="lg" variant="secondary" asChild className="bg-white text-cyan-800 hover:bg-gray-100">
-                    <Link href="/signup">Become a Partner</Link>
+                  <Button
+                    size="lg"
+                    variant="secondary"
+                    onClick={() => setShowFranchiseForm(true)}
+                    className="bg-white text-cyan-800 hover:bg-gray-100"
+                  >
+                    Become a Partner
                   </Button>
                   <Button
                     size="lg"
@@ -479,6 +585,58 @@ export default function LandingPage() {
                   </div>
                 </CardContent>
               </Card>
+            </section>
+
+            <section>
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold text-cyan-900 mb-2">Success Stories</h2>
+                <p className="text-gray-600">Hear from our franchisee partners</p>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2">
+                {testimonials.map((testimonial, index) => (
+                  <Card key={index} className="hover:shadow-lg transition-shadow">
+                    <CardContent className="pt-6">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className="h-14 w-14 rounded-full bg-cyan-800 text-white flex items-center justify-center font-bold text-lg flex-shrink-0">
+                          {testimonial.avatar}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between gap-2">
+                            <div>
+                              <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                              <p className="text-sm text-gray-600">{testimonial.location}</p>
+                              <p className="text-sm text-cyan-800 font-medium">{testimonial.store}</p>
+                            </div>
+                            <CheckCircle2 className="h-5 w-5 text-cyan-800 flex-shrink-0" />
+                          </div>
+                          <div className="flex items-center gap-1 mt-2">
+                            {[...Array(testimonial.rating)].map((_, i) => (
+                              <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                            ))}
+                            <span className="text-xs text-gray-500 ml-2">
+                              {testimonial.years} {testimonial.years === 1 ? "year" : "years"} with Medplus
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="relative">
+                        <span className="text-6xl text-cyan-100 absolute -top-2 -left-2">"</span>
+                        <p className="text-gray-700 text-sm leading-relaxed relative z-10 pl-6">{testimonial.quote}</p>
+                      </div>
+                      <div className="mt-4 pt-4 border-t flex items-center gap-2">
+                        <TrendingUp className="h-4 w-4 text-green-600" />
+                        <span className="text-sm font-medium text-green-600">{testimonial.metric}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+              <div className="text-center mt-8">
+                <p className="text-gray-700 mb-4">Ready to write your own success story?</p>
+                <Button size="lg" onClick={() => setShowFranchiseForm(true)} className="bg-cyan-800 hover:bg-cyan-900">
+                  Start Your Journey Today
+                </Button>
+              </div>
             </section>
           </>
         )}
@@ -704,13 +862,152 @@ export default function LandingPage() {
         )}
       </div>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-gray-300 py-8 mt-12">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm">© 2025 Medplus. All rights reserved.</p>
-          <p className="text-xs mt-2">Building healthier communities, one pharmacy at a time.</p>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex items-center gap-3">
+              <Image src="/medplus-logo.png" alt="Medplus Logo" width={120} height={40} className="h-10 w-auto rounded-lg" />
+            </div>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-10 w-10 rounded-full bg-gray-800 hover:bg-cyan-800 flex items-center justify-center transition-colors"
+              >
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-10 w-10 rounded-full bg-gray-800 hover:bg-cyan-800 flex items-center justify-center transition-colors"
+              >
+                <Twitter className="h-5 w-5" />
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-10 w-10 rounded-full bg-gray-800 hover:bg-cyan-800 flex items-center justify-center transition-colors"
+              >
+                <Linkedin className="h-5 w-5" />
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-10 w-10 rounded-full bg-gray-800 hover:bg-cyan-800 flex items-center justify-center transition-colors"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="h-10 w-10 rounded-full bg-gray-800 hover:bg-cyan-800 flex items-center justify-center transition-colors"
+              >
+                <Youtube className="h-5 w-5" />
+              </a>
+            </div>
+            <div className="text-center">
+              <p className="text-sm">© 2025 Medplus. All rights reserved.</p>
+              <p className="text-xs mt-2">Building healthier communities, one pharmacy at a time.</p>
+            </div>
+          </div>
         </div>
       </footer>
+
+      <Dialog open={showFranchiseForm} onOpenChange={setShowFranchiseForm}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-cyan-900">Franchisee Query Form</DialogTitle>
+            <DialogDescription>Fill in your details and we'll get back to you soon</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleFranchiseSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="fullName">
+                Full Name <span className="text-red-500">*</span>
+              </Label>
+              <Input id="fullName" name="fullName" placeholder="Enter your full name" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="mobile">
+                Mobile Number <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="mobile"
+                name="mobile"
+                type="tel"
+                placeholder="10-digit mobile number"
+                pattern="[0-9]{10}"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input id="email" name="email" type="email" placeholder="your.email@example.com" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="city">
+                City <span className="text-red-500">*</span>
+              </Label>
+              <Input id="city" name="city" placeholder="Enter your city" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="state">
+                State <span className="text-red-500">*</span>
+              </Label>
+              <Input id="state" name="state" placeholder="Enter your state" required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="pincode">
+                Pincode <span className="text-red-500">*</span>
+              </Label>
+              <Input id="pincode" name="pincode" placeholder="6-digit pincode" pattern="[0-9]{6}" required />
+            </div>
+            <div className="space-y-2">
+              <Label>
+                I am interested in <span className="text-red-500">*</span>
+              </Label>
+              <RadioGroup name="interest" required>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="franchisee" id="franchisee" />
+                  <Label htmlFor="franchisee" className="font-normal cursor-pointer">
+                    Interested in Franchisee
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="converting" id="converting" />
+                  <Label htmlFor="converting" className="font-normal cursor-pointer">
+                    Interested in converting existing Medical Shop
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="job" id="job" />
+                  <Label htmlFor="job" className="font-normal cursor-pointer">
+                    Interested in Job
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="renting" id="renting" />
+                  <Label htmlFor="renting" className="font-normal cursor-pointer">
+                    Interested in Renting a Shop
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+            <div className="flex gap-3 pt-4">
+              <Button type="button" variant="outline" onClick={() => setShowFranchiseForm(false)} className="flex-1">
+                Cancel
+              </Button>
+              <Button type="submit" className="flex-1 bg-cyan-800 hover:bg-cyan-900">
+                Submit Query
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

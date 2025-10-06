@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -41,9 +42,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
-            <div className="h-12 w-12 rounded-lg bg-cyan-800 flex items-center justify-center">
-              <span className="text-2xl font-bold text-white">M+</span>
-            </div>
+            <Image src="/medplus-logo.png" alt="Medplus Logo" width={120} height={40} className="h-10 w-auto" />
           </div>
           <CardTitle className="text-2xl font-bold text-cyan-900">Welcome Back</CardTitle>
           <CardDescription>Sign in to your Medplus franchisee account</CardDescription>

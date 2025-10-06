@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
@@ -37,11 +38,8 @@ export function DashboardSidebar() {
   return (
     <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
       <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-        <div className="flex h-16 shrink-0 items-center gap-3">
-          <div className="h-10 w-10 rounded-lg bg-cyan-800 flex items-center justify-center">
-            <span className="text-xl font-bold text-white">M</span>
-          </div>
-          <span className="text-xl font-bold text-cyan-900">Medplus</span>
+        <div className="flex h-16 shrink-0 items-center">
+          <Image src="/medplus-logo.png" alt="Medplus Logo" width={120} height={40} className="h-8 w-auto rounded-lg" />
         </div>
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">
