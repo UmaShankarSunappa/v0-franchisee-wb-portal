@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { getCurrentUser } from "@/lib/auth/mock-auth"
 import { DashboardSidebar } from "@/components/dashboard/sidebar"
 import { DashboardHeader } from "@/components/dashboard/header"
+import Image from "next/image"
 
 export default function DashboardLayout({
   children,
@@ -14,6 +15,7 @@ export default function DashboardLayout({
 }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -30,9 +32,13 @@ export default function DashboardLayout({
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="h-12 w-12 rounded-lg bg-cyan-800 flex items-center justify-center mx-auto mb-4">
-            <span className="text-2xl font-bold text-white">M+</span>
-          </div>
+          <Image
+            src="/medplus-logo.png"
+            alt="Medplus Logo"
+            width={120}
+            height={40}
+            className="h-10 w-auto mx-auto mb-4"
+          />
           <p className="text-gray-600">Loading...</p>
         </div>
       </div>
@@ -45,10 +51,10 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <DashboardSidebar />
+      <DashboardSidebar mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
       <div className="lg:pl-64">
-        <DashboardHeader />
-        <main className="p-6">{children}</main>
+        <DashboardHeader setMobileMenuOpen={setMobileMenuOpen} />
+        <main className="p-4 sm:p-6">{children}</main>
       </div>
     </div>
   )

@@ -69,6 +69,51 @@ export default function LandingPage() {
 
   const faqs = [
     {
+      category: "Franchisee Onboarding & Setup",
+      questions: [
+        {
+          q: "What documents are required before signing the franchise agreement?",
+          a: "You will need to submit KYC documents (PAN, Aadhaar, GST Registration, Shop & Establishment License, and Drug License for pharmacy operations).",
+        },
+        {
+          q: "What is the minimum investment required to start a MedPlus franchise?",
+          a: "Approx. ₹15–20 Lakhs depending on store size, location, and inventory requirements (figures vary regionally; confirm with Franchisee Business Development team).",
+        },
+        {
+          q: "How much space is required to open a MedPlus store?",
+          a: "Minimum 300–400 sq. ft. with proper storage area, air conditioning, and accessibility for customers.",
+        },
+        {
+          q: "Who is responsible for interior design and branding setup of the store?",
+          a: "MedPlus provides standard branding guidelines and approved vendors. Franchisees must ensure the setup matches company specifications before launch.",
+        },
+        {
+          q: "Is pharmacy staff recruitment handled by the company or franchisee?",
+          a: "Franchisees are responsible for hiring qualified staff (at least one registered pharmacist). MedPlus may assist with training and certification.",
+        },
+        {
+          q: "Is training provided for me and my staff before store launch?",
+          a: "Yes, MedPlus conducts mandatory training sessions covering POS usage, billing, inventory management, customer service, and compliance.",
+        },
+        {
+          q: "What IT infrastructure is required in my store?",
+          a: "A computer system compatible with MedPlus POS, a barcode scanner, receipt printer, internet connectivity, and backup power supply.",
+        },
+        {
+          q: "Does MedPlus help in obtaining the necessary drug licenses?",
+          a: "Franchisees must apply for licenses, but MedPlus provides guidance and required documentation support.",
+        },
+        {
+          q: "How soon after store setup will I start receiving inventory?",
+          a: "Once store readiness and compliance checks are completed, the first stock dispatch happens within 7–10 working days.",
+        },
+        {
+          q: "What initial marketing support will I receive for my store launch?",
+          a: "MedPlus provides launch kits — including banners, posters, flyers, and digital campaigns — to help promote your store in the local area.",
+        },
+      ],
+    },
+    {
       category: "Technical (POS / EDP / IT)",
       questions: [
         {
@@ -277,8 +322,14 @@ export default function LandingPage() {
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Image src="/medplus-logo.png" alt="Medplus Logo" width={120} height={40} className="h-10 w-auto rounded-lg font-extrabold shadow-xl" />
-            <h1 className="text-xl font-semibold text-cyan-900 hidden sm:block">Medplus Franchisee     </h1>
+            <Image
+              src="/medplus-logo.png"
+              alt="Medplus Logo"
+              width={120}
+              height={40}
+              className="h-10 w-auto rounded-lg font-extrabold shadow-xl"
+            />
+            <h1 className="text-xl font-semibold text-cyan-900 hidden sm:block">Medplus Franchisee </h1>
           </div>
           <div className="flex gap-3">
             <Button variant="outline" asChild className="border-cyan-800 text-cyan-800 hover:bg-cyan-50 bg-transparent">
@@ -866,7 +917,13 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center gap-6">
             <div className="flex items-center gap-3">
-              <Image src="/medplus-logo.png" alt="Medplus Logo" width={120} height={40} className="h-10 w-auto rounded-lg" />
+              <Image
+                src="/medplus-logo.png"
+                alt="Medplus Logo"
+                width={120}
+                height={40}
+                className="h-10 w-auto rounded-lg"
+              />
             </div>
             <div className="flex items-center gap-4">
               <a

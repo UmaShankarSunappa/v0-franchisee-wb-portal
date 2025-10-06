@@ -16,7 +16,9 @@ import {
   FileSpreadsheet,
   Receipt,
   MessageSquare,
+  X,
 } from "lucide-react"
+import { Sheet, SheetContent } from "@/components/ui/sheet"
 
 const navigation = [
   { name: "Home", href: "/dashboard", icon: Home },
@@ -32,47 +34,68 @@ const navigation = [
   { name: "Complaints", href: "/dashboard/complaints", icon: MessageSquare },
 ]
 
-export function DashboardSidebar() {
+interface DashboardSidebarProps {
+  mobileMenuOpen: boolean
+  setMobileMenuOpen: (open: boolean) => void
+}
+
+export function DashboardSidebar({ mobileMenuOpen, setMobileMenuOpen }: DashboardSidebarProps) {
   const pathname = usePathname()
 
-  return (
-    <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
-      <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
-        <div className="flex h-16 shrink-0 items-center">
-          <Image src="/medplus-logo.png" alt="Medplus Logo" width={120} height={40} className="h-8 w-auto rounded-lg" />
-        </div>
-        <nav className="flex flex-1 flex-col">
-          <ul role="list" className="flex flex-1 flex-col gap-y-7">
-            <li>
-              <ul role="list" className="-mx-2 space-y-1">
-                {navigation.map((item) => {
-                  const isActive = pathname === item.href
-                  return (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        className={cn(
-                          isActive ? "bg-cyan-50 text-cyan-800" : "text-gray-700 hover:text-cyan-800 hover:bg-gray-50",
-                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-medium transition-colors",
-                        )}
-                      >
-                        <item.icon
-                          className={cn(
-                            isActive ? "text-cyan-800" : "text-gray-400 group-hover:text-cyan-800",
-                            "h-5 w-5 shrink-0",
-                          )}
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </Link>
-                    </li>
-                  )
-                })}
-              </ul>
-            </li>
-          </ul>
-        </nav>
+  const SidebarContent = () => (
+    <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
+      <div className="flex h-16 shrink-0 items-center justify-between">
+        <Image src="/medplus-logo.png" alt="Medplus Logo" width={120} height={40} className="h-8 w-auto" />
+        <button onClick={() => setMobileMenuOpen(false)} className="lg:hidden">
+          <X className="h-6 w-6 text-gray-500" />
+        </button>
       </div>
+      <nav className="flex flex-1 flex-col">
+        <ul role="list" className="flex flex-1 flex-col gap-y-7">
+          <li>
+            <ul role="list" className="-mx-2 space-y-1">
+              {navigation.map((item) => {
+                const isActive = pathname === item.href
+                return (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        isActive ? "bg-cyan-50 text-cyan-800" : "text-gray-700 hover:text-cyan-800 hover:bg-gray-50",
+                        "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-medium transition-colors",
+                      )}
+                    >
+                      <item.icon
+                        className={cn(
+                          isActive ? "text-cyan-800" : "text-gray-400 group-hover:text-cyan-800",
+                          "h-5 w-5 shrink-0",
+                        )}
+                        aria-hidden="true"
+                      />
+                      {item.name}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </li>
+        </ul>
+      </nav>
     </div>
+  )
+
+  return (
+    <>
+      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
+        <SidebarContent />
+      </div>
+
+      <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+        <SheetContent side="left" className="p-0 w-64">
+          <SidebarContent />
+        </SheetContent>
+      </Sheet>
+    </>
   )
 }

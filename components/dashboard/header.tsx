@@ -13,9 +13,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { UserIcon, LogOut, Store } from "lucide-react"
+import { UserIcon, LogOut, Store, Menu } from "lucide-react"
 
-export function DashboardHeader() {
+interface DashboardHeaderProps {
+  setMobileMenuOpen: (open: boolean) => void
+}
+
+export function DashboardHeader({ setMobileMenuOpen }: DashboardHeaderProps) {
   const [selectedStore, setSelectedStore] = useState("all")
   const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
@@ -31,12 +35,17 @@ export function DashboardHeader() {
 
   return (
     <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+      <button type="button" className="lg:hidden -m-2.5 p-2.5 text-gray-700" onClick={() => setMobileMenuOpen(true)}>
+        <span className="sr-only">Open sidebar</span>
+        <Menu className="h-6 w-6" aria-hidden="true" />
+      </button>
+
       <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
         <div className="flex items-center gap-x-4 lg:gap-x-6 flex-1">
           <div className="flex items-center gap-2">
-            <Store className="h-5 w-5 text-gray-400" />
+            <Store className="h-5 w-5 text-gray-400 hidden sm:block" />
             <Select value={selectedStore} onValueChange={setSelectedStore}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-[140px] sm:w-[200px]">
                 <SelectValue placeholder="Select store" />
               </SelectTrigger>
               <SelectContent>
