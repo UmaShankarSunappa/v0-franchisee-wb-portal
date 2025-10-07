@@ -17,6 +17,7 @@ import {
   Receipt,
   MessageSquare,
   X,
+  ClipboardList,
 } from "lucide-react"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 
@@ -29,6 +30,7 @@ const navigation = [
   { name: "Payments", href: "/dashboard/payments", icon: Wallet },
   { name: "Provisional Indent", href: "/dashboard/indent", icon: FileText },
   { name: "Performance Reports", href: "/dashboard/reports", icon: BarChart3 },
+  { name: "Field Visit Reports", href: "/dashboard/field-visits", icon: ClipboardList },
   { name: "Monthly Reports", href: "/dashboard/monthly-reports", icon: FileSpreadsheet },
   { name: "Invoices", href: "/dashboard/invoices", icon: Receipt },
   { name: "Complaints", href: "/dashboard/complaints", icon: MessageSquare },

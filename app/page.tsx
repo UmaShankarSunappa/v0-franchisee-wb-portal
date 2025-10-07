@@ -877,9 +877,9 @@ export default function LandingPage() {
                     <h3 className="text-lg font-semibold text-cyan-800 mb-4">
                       Franchisee Relations / Business Development
                     </h3>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div className="flex items-start gap-3">
-                        <Mail className="h-5 w-5 text-cyan-800 mt-0.5" />
+                        <Mail className="h-5 w-5 text-cyan-800 mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="font-medium text-gray-900">Email</p>
                           <a href="mailto:franchise@medplusindia.com" className="text-cyan-800 hover:underline">
@@ -887,18 +887,60 @@ export default function LandingPage() {
                           </a>
                         </div>
                       </div>
-                      <div className="flex items-start gap-3">
-                        <Phone className="h-5 w-5 text-cyan-800 mt-0.5" />
-                        <div>
-                          <p className="font-medium text-gray-900">Phone</p>
-                          <a href="tel:+918688581100" className="text-cyan-800 hover:underline">
-                            +91 86885 81100
-                          </a>
-                          <p className="text-sm text-gray-600">(Andhra Pradesh & Telangana)</p>
+
+                      <div>
+                        <div className="flex items-start gap-3 mb-3">
+                          <Phone className="h-5 w-5 text-cyan-800 mt-0.5 flex-shrink-0" />
+                          <p className="font-medium text-gray-900">Phone Numbers (State-wise)</p>
+                        </div>
+                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 ml-8">
+                          <div className="p-3 border rounded-lg bg-gray-50">
+                            <p className="font-medium text-gray-900 text-sm">Andhra Pradesh & Telangana</p>
+                            <a href="tel:+918688581100" className="text-cyan-800 hover:underline text-sm">
+                              +91 86885 81100
+                            </a>
+                          </div>
+                          <div className="p-3 border rounded-lg bg-gray-50">
+                            <p className="font-medium text-gray-900 text-sm">Maharashtra</p>
+                            <a href="tel:+918688581101" className="text-cyan-800 hover:underline text-sm">
+                              +91 86885 81101
+                            </a>
+                          </div>
+                          <div className="p-3 border rounded-lg bg-gray-50">
+                            <p className="font-medium text-gray-900 text-sm">Tamil Nadu</p>
+                            <a href="tel:+918688581102" className="text-cyan-800 hover:underline text-sm">
+                              +91 86885 81102
+                            </a>
+                          </div>
+                          <div className="p-3 border rounded-lg bg-gray-50">
+                            <p className="font-medium text-gray-900 text-sm">Karnataka</p>
+                            <a href="tel:+918688581103" className="text-cyan-800 hover:underline text-sm">
+                              +91 86885 81103
+                            </a>
+                          </div>
+                          <div className="p-3 border rounded-lg bg-gray-50">
+                            <p className="font-medium text-gray-900 text-sm">West Bengal</p>
+                            <a href="tel:+918688581104" className="text-cyan-800 hover:underline text-sm">
+                              +91 86885 81104
+                            </a>
+                          </div>
+                          <div className="p-3 border rounded-lg bg-gray-50">
+                            <p className="font-medium text-gray-900 text-sm">Madhya Pradesh</p>
+                            <a href="tel:+918688581105" className="text-cyan-800 hover:underline text-sm">
+                              +91 86885 81105
+                            </a>
+                          </div>
+                          <div className="p-3 border rounded-lg bg-gray-50">
+                            <p className="font-medium text-gray-900 text-sm">Chhattisgarh</p>
+                            <a href="tel:+918688581106" className="text-cyan-800 hover:underline text-sm">
+                              +91 86885 81106
+                            </a>
+                          </div>
                         </div>
                       </div>
+
                       <div className="flex items-start gap-3">
-                        <Clock className="h-5 w-5 text-cyan-800 mt-0.5" />
+                        <Clock className="h-5 w-5 text-cyan-800 mt-0.5 flex-shrink-0" />
                         <div>
                           <p className="font-medium text-gray-900">Hours of Operation</p>
                           <p className="text-gray-700">Monday – Friday, 9:30 AM – 5:30 PM IST</p>

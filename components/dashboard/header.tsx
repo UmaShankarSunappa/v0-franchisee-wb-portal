@@ -24,9 +24,25 @@ export function DashboardHeader({ setMobileMenuOpen }: DashboardHeaderProps) {
   const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
 
+  const stores = [
+    { id: "all", label: "All Stores" },
+    { id: "store1", label: "Store 1 - Mumbai" },
+    { id: "store2", label: "Store 2 - Delhi" },
+    { id: "store3", label: "Store 3 - Bangalore" },
+  ]
+
   useEffect(() => {
     setUser(getCurrentUser())
+    const saved = typeof window !== "undefined" ? localStorage.getItem("medplus_selected_store") : null
+    if (saved) setSelectedStore(saved)
   }, [])
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("medplus_selected_store", selectedStore)
+      window.dispatchEvent(new CustomEvent("medplus:store-changed", { detail: { storeId: selectedStore } }))
+    }
+  }, [selectedStore])
 
   const handleLogout = () => {
     logout()
@@ -44,15 +60,17 @@ export function DashboardHeader({ setMobileMenuOpen }: DashboardHeaderProps) {
         <div className="flex items-center gap-x-4 lg:gap-x-6 flex-1">
           <div className="flex items-center gap-2">
             <Store className="h-5 w-5 text-gray-400 hidden sm:block" />
+            <span className="text-sm text-gray-700 sm:hidden">Store</span>
             <Select value={selectedStore} onValueChange={setSelectedStore}>
-              <SelectTrigger className="w-[140px] sm:w-[200px]">
+              <SelectTrigger className="w-[160px] sm:w-[220px]" aria-label="Select store">
                 <SelectValue placeholder="Select store" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Stores</SelectItem>
-                <SelectItem value="store1">Store 1 - Mumbai</SelectItem>
-                <SelectItem value="store2">Store 2 - Delhi</SelectItem>
-                <SelectItem value="store3">Store 3 - Bangalore</SelectItem>
+                {stores.map((s) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
