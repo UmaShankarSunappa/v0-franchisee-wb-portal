@@ -4,7 +4,9 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { CalendarIcon } from "lucide-react"
+import { Calendar } from "@/components/ui/calendar"
 import {
   BarChart,
   Bar,
@@ -101,8 +103,7 @@ const COLORS = ["#0e7490", "#7c3aed"]
 
 export default function PerformanceReportsPage() {
   const [selectedStore, setSelectedStore] = useState("all")
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
   const [viewMode, setViewMode] = useState<"day" | "month">("month")
 
   return (
@@ -133,13 +134,28 @@ export default function PerformanceReportsPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="startDate">Start Date</Label>
-              <Input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
-              <Input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+            <div className="space-y-2 md:col-span-2">
+              <Label>Date Range</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button variant="outline" className="w-full justify-start">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange.from
+                      ? dateRange.to
+                        ? `${dateRange.from.toLocaleDateString()} - ${dateRange.to.toLocaleDateString()}`
+                        : dateRange.from.toLocaleDateString()
+                      : "Pick a date range"}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="range"
+                    selected={{ from: dateRange.from, to: dateRange.to }}
+                    onSelect={(r: any) => setDateRange(r)}
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="space-y-2">
               <Label htmlFor="viewMode">View Mode</Label>
@@ -320,18 +336,7 @@ export default function PerformanceReportsPage() {
             <CardTitle className="text-cyan-900">Bounce (Returned) Products Count</CardTitle>
             <CardDescription>Product return trends</CardDescription>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={bounceProductsData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="count" stroke="#0e7490" name="Bounce Count" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
+          <CardContent></CardContent>
         </Card>
 
         {/* SKU Ordered vs Replenished */}
@@ -341,17 +346,7 @@ export default function PerformanceReportsPage() {
             <CardDescription>Inventory fulfillment tracking</CardDescription>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={skuData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="ordered" stroke="#0e7490" name="SKU Ordered" strokeWidth={2} />
-                <Line type="monotone" dataKey="replenished" stroke="#7c3aed" name="SKU Replenished" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
+            <ResponsiveContainer width="100%" height={300}></ResponsiveContainer>
           </CardContent>
         </Card>
       </div>

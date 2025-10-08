@@ -60,7 +60,6 @@ export function DashboardHeader({ setMobileMenuOpen }: DashboardHeaderProps) {
         <div className="flex items-center gap-x-4 lg:gap-x-6 flex-1">
           <div className="flex items-center gap-2">
             <Store className="h-5 w-5 text-gray-400 hidden sm:block" />
-            <span className="text-sm text-gray-700 sm:hidden">Store</span>
             <Select value={selectedStore} onValueChange={setSelectedStore}>
               <SelectTrigger className="w-[160px] sm:w-[220px]" aria-label="Select store">
                 <SelectValue placeholder="Select store" />

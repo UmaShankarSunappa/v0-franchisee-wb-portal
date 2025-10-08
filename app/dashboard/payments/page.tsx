@@ -12,6 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Plus, Search } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { CalendarIcon } from "lucide-react"
+import { Calendar } from "@/components/ui/calendar"
 
 interface Payment {
   id: string
@@ -49,8 +52,7 @@ const mockPayments: Payment[] = [
 
 export default function PaymentsPage() {
   const { toast } = useToast()
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
   const [payments, setPayments] = useState<Payment[]>(mockPayments)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
@@ -66,19 +68,11 @@ export default function PaymentsPage() {
   })
 
   const handleSearch = () => {
-    if (!startDate || !endDate) {
-      toast({
-        title: "Date range required",
-        description: "Please select both start and end dates",
-        variant: "destructive",
-      })
+    if (!dateRange.from || !dateRange.to) {
+      toast({ title: "Date range required", description: "Please pick a date range", variant: "destructive" })
       return
     }
-
-    toast({
-      title: "Search completed",
-      description: `Found ${payments.length} payments`,
-    })
+    toast({ title: "Search completed", description: `Found ${payments.length} payments` })
   }
 
   const handleCreatePayment = () => {
@@ -142,12 +136,27 @@ export default function PaymentsPage() {
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 space-y-2">
-              <Label htmlFor="startDate">Start Date</Label>
-              <Input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-            </div>
-            <div className="flex-1 space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
-              <Input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              <label className="text-sm font-medium text-gray-700">Date Range</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full sm:w-[280px] justify-start bg-transparent">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange.from
+                      ? dateRange.to
+                        ? `${dateRange.from.toLocaleDateString()} - ${dateRange.to.toLocaleDateString()}`
+                        : dateRange.from.toLocaleDateString()
+                      : "Pick a date range"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="range"
+                    selected={{ from: dateRange.from, to: dateRange.to }}
+                    onSelect={(r: any) => setDateRange(r)}
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="flex items-end">
               <Button onClick={handleSearch} className="bg-cyan-800 hover:bg-cyan-900 w-full sm:w-auto">

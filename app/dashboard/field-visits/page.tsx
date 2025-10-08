@@ -3,9 +3,11 @@
 import { useMemo, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Download, Filter } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { CalendarIcon } from "lucide-react"
+import { Calendar } from "@/components/ui/calendar"
 
 type Rating = { value: number; remarks?: string }
 type VisitReport = {
@@ -145,8 +147,7 @@ function exportCSV(rows: VisitReport[]) {
 }
 
 export default function FieldVisitReportsPage() {
-  const [from, setFrom] = useState<string>("")
-  const [to, setTo] = useState<string>("")
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
   const [storeId, setStoreId] = useState<string>("all")
   const [employee, setEmployee] = useState<string>("all")
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -156,13 +157,13 @@ export default function FieldVisitReportsPage() {
   const filtered = useMemo(() => {
     return scoped.filter((r) => {
       const d = new Date(r.datetime).getTime()
-      const okFrom = from ? d >= new Date(from).getTime() : true
-      const okTo = to ? d <= new Date(to).getTime() + 86_400_000 - 1 : true
+      const okFrom = dateRange.from ? d >= dateRange.from.getTime() : true
+      const okTo = dateRange.to ? d <= dateRange.to.getTime() + 86_400_000 - 1 : true
       const okStore = storeId === "all" ? true : r.storeId === storeId
       const okEmp = employee === "all" ? true : r.employeeName === employee
       return okFrom && okTo && okStore && okEmp
     })
-  }, [scoped, from, to, storeId, employee])
+  }, [scoped, dateRange, storeId, employee])
 
   const stores = Array.from(new Set(scoped.map((r) => `${r.storeId}|${r.storeName}`)))
   const employees = Array.from(new Set(scoped.map((r) => r.employeeName)))
@@ -177,20 +178,26 @@ export default function FieldVisitReportsPage() {
               <Filter className="h-4 w-4 text-cyan-800" />
               <span className="text-sm text-gray-600">Filters</span>
             </div>
-            <Input
-              type="date"
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-              className="w-[150px]"
-              aria-label="From date"
-            />
-            <Input
-              type="date"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-              className="w-[150px]"
-              aria-label="To date"
-            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="w-[260px] justify-start bg-transparent">
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateRange.from
+                    ? dateRange.to
+                      ? `${dateRange.from.toLocaleDateString()} - ${dateRange.to.toLocaleDateString()}`
+                      : dateRange.from.toLocaleDateString()
+                    : "Pick a date range"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="range"
+                  selected={{ from: dateRange.from, to: dateRange.to }}
+                  onSelect={(r: any) => setDateRange(r)}
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
             <Select value={storeId} onValueChange={setStoreId}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Store" />

@@ -3,13 +3,14 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Eye, RotateCcw, MapPin, Search } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { CalendarIcon } from "lucide-react"
+import { Calendar } from "@/components/ui/calendar"
 
 interface Order {
   id: string
@@ -53,46 +54,28 @@ const mockOrders: Order[] = [
 
 export default function OrderHistoryPage() {
   const { toast } = useToast()
-  const [startDate, setStartDate] = useState("")
-  const [endDate, setEndDate] = useState("")
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
   const [orders, setOrders] = useState<Order[]>(mockOrders)
   const [trackingDialogOpen, setTrackingDialogOpen] = useState(false)
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
 
   const handleSearch = () => {
-    if (!startDate || !endDate) {
-      toast({
-        title: "Date range required",
-        description: "Please select both start and end dates",
-        variant: "destructive",
-      })
+    if (!dateRange.from || !dateRange.to) {
+      toast({ title: "Date range required", description: "Please pick a date range", variant: "destructive" })
       return
     }
-
-    const start = new Date(startDate)
-    const end = new Date(endDate)
+    const start = dateRange.from
+    const end = dateRange.to
     const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
-
     if (diffDays > 15) {
-      toast({
-        title: "Invalid date range",
-        description: "Date range cannot exceed 15 days",
-        variant: "destructive",
-      })
+      toast({ title: "Invalid date range", description: "Date range cannot exceed 15 days", variant: "destructive" })
       return
     }
-
-    toast({
-      title: "Search completed",
-      description: `Found ${orders.length} orders`,
-    })
+    toast({ title: "Search completed", description: `Found ${orders.length} orders` })
   }
 
   const handleReorder = (order: Order) => {
-    toast({
-      title: "Items added to cart",
-      description: `All items from ${order.orderId} have been added to your cart`,
-    })
+    toast({ title: "Items added to cart", description: `All items from ${order.orderId} have been added to your cart` })
   }
 
   const handleTrackOrder = (order: Order) => {
@@ -128,12 +111,27 @@ export default function OrderHistoryPage() {
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1 space-y-2">
-              <Label htmlFor="startDate">Start Date</Label>
-              <Input id="startDate" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-            </div>
-            <div className="flex-1 space-y-2">
-              <Label htmlFor="endDate">End Date</Label>
-              <Input id="endDate" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              <label className="text-sm font-medium text-gray-700">Date Range</label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full sm:w-[280px] justify-start bg-transparent">
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {dateRange.from
+                      ? dateRange.to
+                        ? `${dateRange.from.toLocaleDateString()} - ${dateRange.to.toLocaleDateString()}`
+                        : dateRange.from.toLocaleDateString()
+                      : "Pick a date range"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="range"
+                    selected={{ from: dateRange.from, to: dateRange.to }}
+                    onSelect={(r: any) => setDateRange(r)}
+                    numberOfMonths={2}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="flex items-end">
               <Button onClick={handleSearch} className="bg-cyan-800 hover:bg-cyan-900 w-full sm:w-auto">
